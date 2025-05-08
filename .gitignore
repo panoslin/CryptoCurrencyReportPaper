@@ -1,9 +1,2 @@
-*.aux
-*.bbl
-*.blg
-*.fdb_latexmk
-*.fls
-*.log
-*.pdf
-*.synctex.gz
+output/
 src/Optimal_Selfish_Mining_Strategies_in_Bitcoin.txt
