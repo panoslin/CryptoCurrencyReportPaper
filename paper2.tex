@@ -18,20 +18,20 @@
 }
 
 \author{\IEEEauthorblockN{Panos Lin}
-\IEEEauthorblockA{\textit{Computer Science Department} \\
-\textit{Virginia Commonwealth University}\\
-HongKong, China \\
-ling8@vcu.edu}
+    \IEEEauthorblockA{\textit{Computer Science Department} \\
+        \textit{Virginia Commonwealth University}\\
+        HongKong, China \\
+        ling8@vcu.edu}
 
 }
 
 \maketitle
 \begin{abstract}
-The Traveling Salesman Problem (TSP) is a key challenge in combinatorial optimization with real-world relevance in transportation and logistics. To address inefficiencies in the Ride Pingo app for VCU’s RamSafe bus service, this study develops a CUDA-accelerated Genetic Algorithm (GA). The approach leverages GPU parallelization to reduce computational delays and improve scalability under heavy usage. Results demonstrate significant runtime improvements and comparable solution accuracy, showcasing the potential of combining heuristic methods with GPU acceleration to optimize scheduling algorithms. This work provides a foundation for enhancing real-world transportation systems with efficient, scalable solutions.
+    The Traveling Salesman Problem (TSP) is a key challenge in combinatorial optimization with real-world relevance in transportation and logistics. To address inefficiencies in the Ride Pingo app for VCU’s RamSafe bus service, this study develops a CUDA-accelerated Genetic Algorithm (GA). The approach leverages GPU parallelization to reduce computational delays and improve scalability under heavy usage. Results demonstrate significant runtime improvements and comparable solution accuracy, showcasing the potential of combining heuristic methods with GPU acceleration to optimize scheduling algorithms. This work provides a foundation for enhancing real-world transportation systems with efficient, scalable solutions.
 \end{abstract}
 
 \begin{IEEEkeywords}
-TSP, CUDA, Genetic Algorithm
+    TSP, CUDA, Genetic Algorithm
 \end{IEEEkeywords}
 
 \section{Introduction}
@@ -70,16 +70,16 @@ In this context, the current study builds upon existing work by focusing on the 
 Parallel computing frameworks, such as CUDA, have emerged as powerful tools for accelerating metaheuristic algorithms like GAs, particularly for computationally intensive tasks such as fitness evaluation, population initialization, and crossover. CUDA leverages GPU architectures to enable parallel execution, significantly reducing runtime for large-scale optimization problems.
 
 Existing research has demonstrated CUDA’s effectiveness in TSP and related applications. For example:
-    \begin{itemize}
-        \item CUDA-accelerated GAs for large-scale TSP instances have achieved substantial speedups compared to CPU-based implementations, showcasing the potential for parallelized solution exploration\cite{chen2011cuda, fujimoto2011highly}.
-        \item Applications of CUDA to problems such as Vehicle Routing and Network Flow highlight its versatility in handling combinatorial optimization challenges\cite{abbasi2020efficient}.
-    \end{itemize}
+\begin{itemize}
+    \item CUDA-accelerated GAs for large-scale TSP instances have achieved substantial speedups compared to CPU-based implementations, showcasing the potential for parallelized solution exploration\cite{chen2011cuda, fujimoto2011highly}.
+    \item Applications of CUDA to problems such as Vehicle Routing and Network Flow highlight its versatility in handling combinatorial optimization challenges\cite{abbasi2020efficient}.
+\end{itemize}
 
 However, previous studies have limitations:
-    \begin{itemize}
-        \item Many focus on theoretical problems, with limited emphasis on real-world applications like dynamic scheduling in transportation systems.
-        \item Memory management and synchronization challenges sometimes lead to suboptimal GPU utilization, constraining performance gains.
-    \end{itemize}
+\begin{itemize}
+    \item Many focus on theoretical problems, with limited emphasis on real-world applications like dynamic scheduling in transportation systems.
+    \item Memory management and synchronization challenges sometimes lead to suboptimal GPU utilization, constraining performance gains.
+\end{itemize}
 
 
 This study addresses these gaps by applying CUDA-accelerated GAs to a practical problem: optimizing the Ride Pingo app’s scheduling algorithm for RamSafe services. By leveraging techniques like in-place population updates and parallelized computation, it bridges the gap between theoretical advancements and practical applications. The results demonstrate that CUDA can significantly improve runtime efficiency, making the approach scalable for real-world transportation challenges.
@@ -91,45 +91,45 @@ This study addresses these gaps by applying CUDA-accelerated GAs to a practical 
 The Genetic Algorithm (GA) is a heuristic optimization technique inspired by natural selection. Its application to the Traveling Salesman Problem (TSP) involves iteratively improving a population of candidate solutions. The key components of the GA are outlined in Algorithm~\ref{alg:genetic_algorithm}.\\
 
 \begin{algorithm}
-\caption{Serial Genetic Algorithm for TSP}
-\label{alg:genetic_algorithm}
-\begin{algorithmic}[1]
-\REQUIRE Distance matrix \textit{distanceMatrix}, population size \textit{populationSize}, number of generations \textit{generations}, mutation rate \textit{mutationRate}.
-\ENSURE Best tour and its total distance.
+    \caption{Serial Genetic Algorithm for TSP}
+    \label{alg:genetic_algorithm}
+    \begin{algorithmic}[1]
+        \REQUIRE Distance matrix \textit{distanceMatrix}, population size \textit{populationSize}, number of generations \textit{generations}, mutation rate \textit{mutationRate}.
+        \ENSURE Best tour and its total distance.
 
-\STATE Initialize \textit{population} with \textit{populationSize} random permutations of cities.
-\STATE Set \textit{bestTour} $\leftarrow$ \text{empty}, \textit{bestFitness} $\leftarrow 0$.
+        \STATE Initialize \textit{population} with \textit{populationSize} random permutations of cities.
+        \STATE Set \textit{bestTour} $\leftarrow$ \text{empty}, \textit{bestFitness} $\leftarrow 0$.
 
-\FOR{generation = 1 to \textit{generations}}
-    \STATE \textbf{Fitness Evaluation:}
-    \FOR{each \textit{tour} in \textit{population}}
+        \FOR{generation = 1 to \textit{generations}}
+        \STATE \textbf{Fitness Evaluation:}
+        \FOR{each \textit{tour} in \textit{population}}
         \STATE Compute fitness as $\text{Fitness} = \frac{1}{\text{Total Distance}}$.
         \IF{current fitness $>$ \textit{bestFitness}}
-            \STATE Update \textit{bestTour} and \textit{bestFitness}.
+        \STATE Update \textit{bestTour} and \textit{bestFitness}.
         \ENDIF
-    \ENDFOR
+        \ENDFOR
 
-    \STATE \textbf{Check for Stagnation:}
-    \IF{no significant improvement in \textit{bestFitness} for \textit{maxStagnationGenerations}}
+        \STATE \textbf{Check for Stagnation:}
+        \IF{no significant improvement in \textit{bestFitness} for \textit{maxStagnationGenerations}}
         \STATE Terminate early.
-    \ENDIF
+        \ENDIF
 
-    \STATE \textbf{Elitism:} Retain the best individual in the population.
+        \STATE \textbf{Elitism:} Retain the best individual in the population.
 
-    \STATE \textbf{Selection, Crossover, and Mutation:}
-    \STATE Create \textit{newPopulation}, initially containing the best individual.
-    \WHILE{\textit{newPopulation} size $<$ \textit{populationSize}}
+        \STATE \textbf{Selection, Crossover, and Mutation:}
+        \STATE Create \textit{newPopulation}, initially containing the best individual.
+        \WHILE{\textit{newPopulation} size $<$ \textit{populationSize}}
         \STATE Randomly select two parents from the top 50\% of the population.
         \STATE Apply \textbf{Partially Mapped Crossover (PMX)} to generate offspring.
         \STATE Apply \textbf{Swap Mutation} to offspring with probability \textit{mutationRate}.
         \STATE Add offspring to \textit{newPopulation}.
-    \ENDWHILE
+        \ENDWHILE
 
-    \STATE Replace \textit{population} with \textit{newPopulation}.
-\ENDFOR
+        \STATE Replace \textit{population} with \textit{newPopulation}.
+        \ENDFOR
 
-\RETURN \textit{bestTour} and its total distance.
-\end{algorithmic}
+        \RETURN \textit{bestTour} and its total distance.
+    \end{algorithmic}
 \end{algorithm}
 
 \subsubsection{Initialization}
@@ -140,7 +140,7 @@ The algorithm begins by generating a population of random tours (permutations of
 
 The fitness of each tour is computed as the inverse of its total distance. A shorter tour results in a higher fitness value.
 \begin{equation}
-     \text{Fitness} = \frac{1}{\text{Total Distance}}
+    \text{Fitness} = \frac{1}{\text{Total Distance}}
 \end{equation}
 
 \subsubsection{Selection}
@@ -181,48 +181,48 @@ The CUDA implementation of the Genetic Algorithm (GA) for the Traveling Salesman
 
 
 \begin{algorithm}
-\caption{CUDA-Accelerated Genetic Algorithm for TSP}
-\label{alg:cuda_genetic_algorithm}
-\begin{algorithmic}[1]
-\REQUIRE Distance matrix \textit{distanceMatrix}, population size \textit{populationSize}, number of generations \textit{generations}, mutation rate \textit{mutationRate}.
-\ENSURE Best tour and its total distance.
+    \caption{CUDA-Accelerated Genetic Algorithm for TSP}
+    \label{alg:cuda_genetic_algorithm}
+    \begin{algorithmic}[1]
+        \REQUIRE Distance matrix \textit{distanceMatrix}, population size \textit{populationSize}, number of generations \textit{generations}, mutation rate \textit{mutationRate}.
+        \ENSURE Best tour and its total distance.
 
-\STATE \textbf{CUDA Initialization:}
-\STATE Allocate device memory for \textit{population}, \textit{fitness}, \textit{curandStates}, and \textit{distanceMatrix}.
-\STATE Initialize \textit{curandStates} for random number generation.
+        \STATE \textbf{CUDA Initialization:}
+        \STATE Allocate device memory for \textit{population}, \textit{fitness}, \textit{curandStates}, and \textit{distanceMatrix}.
+        \STATE Initialize \textit{curandStates} for random number generation.
 
-\STATE \textbf{Population Initialization:}
-\STATE Use \textit{initPopulationKernel} to initialize \textit{population} with \textit{populationSize} random permutations of cities (one thread per individual).
+        \STATE \textbf{Population Initialization:}
+        \STATE Use \textit{initPopulationKernel} to initialize \textit{population} with \textit{populationSize} random permutations of cities (one thread per individual).
 
-\STATE Set \textit{bestTour} $\leftarrow$ \text{empty}, \textit{bestFitness} $\leftarrow 0$.
+        \STATE Set \textit{bestTour} $\leftarrow$ \text{empty}, \textit{bestFitness} $\leftarrow 0$.
 
-\FOR{generation = 1 to \textit{generations}}
-    \STATE \textbf{Fitness Evaluation:}
-    \STATE Use \textit{fitnessKernel} to compute fitness for each individual (one thread per individual).
-    \STATE Use \textit{findBestKernel} to update \textit{bestTour} and \textit{bestFitness} if a better individual is found.
+        \FOR{generation = 1 to \textit{generations}}
+        \STATE \textbf{Fitness Evaluation:}
+        \STATE Use \textit{fitnessKernel} to compute fitness for each individual (one thread per individual).
+        \STATE Use \textit{findBestKernel} to update \textit{bestTour} and \textit{bestFitness} if a better individual is found.
 
-    \STATE \textbf{Check for Stagnation:}
-    \IF{no significant improvement in \textit{bestFitness} for \textit{maxStagnationGenerations}}
+        \STATE \textbf{Check for Stagnation:}
+        \IF{no significant improvement in \textit{bestFitness} for \textit{maxStagnationGenerations}}
         \STATE Terminate early.
-    \ENDIF
+        \ENDIF
 
-    \STATE \textbf{Elitism:} Retain the best individual in the population.
+        \STATE \textbf{Elitism:} Retain the best individual in the population.
 
-    \STATE \textbf{Selection and Crossover:}
-    \STATE Use \textit{selectionKernel} to select two parents for each offspring, applying the max-value mask to encode new values without overwriting parent genes.
-    \STATE Use \textit{crossoverKernel} to perform order crossover, decoding parent values with a modulus operation and updating the offspring.
+        \STATE \textbf{Selection and Crossover:}
+        \STATE Use \textit{selectionKernel} to select two parents for each offspring, applying the max-value mask to encode new values without overwriting parent genes.
+        \STATE Use \textit{crossoverKernel} to perform order crossover, decoding parent values with a modulus operation and updating the offspring.
 
-    \STATE \textbf{Mutation:}
-    \STATE Use \textit{mutationKernel} to apply swap mutation to each individual with probability \textit{mutationRate}.
+        \STATE \textbf{Mutation:}
+        \STATE Use \textit{mutationKernel} to apply swap mutation to each individual with probability \textit{mutationRate}.
 
-    \STATE Remove masks from \textit{population} using a floor division operation.
-\ENDFOR
+        \STATE Remove masks from \textit{population} using a floor division operation.
+        \ENDFOR
 
-\STATE \textbf{Final Best Solution:}
-\STATE Retrieve \textit{bestTour} and \textit{bestFitness} from device memory.
+        \STATE \textbf{Final Best Solution:}
+        \STATE Retrieve \textit{bestTour} and \textit{bestFitness} from device memory.
 
-\RETURN \textit{bestTour} and its total distance.
-\end{algorithmic}
+        \RETURN \textit{bestTour} and its total distance.
+    \end{algorithmic}
 \end{algorithm}
 
 
@@ -238,21 +238,21 @@ This approach enables in-place updates to the population without requiring addit
 
 
 \begin{table}[h!]
-\centering
-\caption{Software Specifications}
-\begin{tabular}{|l|p{0.5\linewidth}|}
-\hline
-\textbf{Feature}          & \textbf{Details}                                                \\ \hline
-C++ Standard              & C++17                                                           \\ \hline
-CUDA Standard             & CUDA 11.7                                                      \\ \hline
-CUDA Architectures        & Compute capability 6.1                                         \\ \hline
-Generations               & 10000                                                          \\ \hline
-Mutation Rate             & 0.1                                                            \\ \hline
-Population Size           & 1024                                                           \\ \hline
-Epsilon                   & $1 \times 10^{-7}$ (minimum improvement considered significant) \\ \hline
-Max Stagnation Generations & 1000 (maximum allowed stagnation generations)                 \\ \hline
-\end{tabular}
-\label{tab:software_specs}
+    \centering
+    \caption{Software Specifications}
+    \begin{tabular}{|l|p{0.5\linewidth}|}
+        \hline
+        \textbf{Feature}           & \textbf{Details}                                                \\ \hline
+        C++ Standard               & C++17                                                           \\ \hline
+        CUDA Standard              & CUDA 11.7                                                       \\ \hline
+        CUDA Architectures         & Compute capability 6.1                                          \\ \hline
+        Generations                & 10000                                                           \\ \hline
+        Mutation Rate              & 0.1                                                             \\ \hline
+        Population Size            & 1024                                                            \\ \hline
+        Epsilon                    & $1 \times 10^{-7}$ (minimum improvement considered significant) \\ \hline
+        Max Stagnation Generations & 1000 (maximum allowed stagnation generations)                   \\ \hline
+    \end{tabular}
+    \label{tab:software_specs}
 \end{table}
 
 
@@ -267,32 +267,32 @@ The performance of the CUDA-accelerated Genetic Algorithm (GA) was evaluated on 
 
 
 \begin{table*}[ht]
-\centering
-\caption{Summary of Results}
-\begin{tabular}{|c|c|c|c|c|c|c|}
-\hline
-\textbf{Test Case} & \textbf{No. of Cities} & \textbf{Expected Dist.} & \textbf{Best Dist. (CUDA)} & \textbf{Best Dist. (Serial)} & \textbf{Time (CUDA)} & \textbf{Time (Serial)} \\ \hline
-1                  & 3                      & 74                      & 74                         & 74                          & 0.29685             & 0.288301              \\ \hline
-2                  & 4                      & 53                      & 53                         & 53                          & 0.0924828           & 0.300332              \\ \hline
-3                  & 5                      & 61                      & 61                         & 61                          & 0.0956978           & 0.320307              \\ \hline
-4                  & 6                      & 68                      & 68                         & 68                          & 0.100375            & 0.341004              \\ \hline
-5                  & 7                      & 74                      & 74                         & 74                          & 0.104818            & 0.361033              \\ \hline
-6                  & 8                      & 103                     & 103                        & 103                         & 0.106892            & 0.380592              \\ \hline
-7                  & 9                      & 76                      & 76                         & 76                          & 0.115359            & 0.445045              \\ \hline
-8                  & 10                     & 118                     & 118                        & 118                         & 0.12311             & 0.429728              \\ \hline
-9                  & 11                     & 86                      & 86                         & 86                          & 0.132754            & 0.514355              \\ \hline
-10                 & 12                     & 82                      & 89                         & 82                          & 0.140774            & 0.774395              \\ \hline
-11                 & 13                     & 86                      & 86                         & 88                          & 0.151665            & 0.911996              \\ \hline
-12                 & 14                     & 79                      & 83                         & 81                          & 0.166655            & 1.1125                \\ \hline
-13                 & 15                     & 86                      & 99                         & 90                          & 0.193334            & 0.955698              \\ \hline
-14                 & 16                     & 89                      & 98                         & 113                         & 0.188624            & 1.31044               \\ \hline
-15                 & 17                     & 93                      & 107                        & 96                          & 0.275075            & 1.94006               \\ \hline
-16                 & 18                     & 111                     & 135                        & 151                         & 0.243423            & 1.73838               \\ \hline
-17                 & 29                     & 27,603                  & 31,508                     & 30,735                      & 0.404249            & 1.68196               \\ \hline
-18                 & 38                     & 6,656                   & 8,591                      & 7,379                       & 0.673242            & 3.91157               \\ \hline
-19                 & 194                    & 9,352                   & 65,556                     & 52,010                      & 12.9198             & 131.227               \\ \hline
-\end{tabular}
-\label{tab:summary_results}
+    \centering
+    \caption{Summary of Results}
+    \begin{tabular}{|c|c|c|c|c|c|c|}
+        \hline
+        \textbf{Test Case} & \textbf{No. of Cities} & \textbf{Expected Dist.} & \textbf{Best Dist. (CUDA)} & \textbf{Best Dist. (Serial)} & \textbf{Time (CUDA)} & \textbf{Time (Serial)} \\ \hline
+        1                  & 3                      & 74                      & 74                         & 74                           & 0.29685              & 0.288301               \\ \hline
+        2                  & 4                      & 53                      & 53                         & 53                           & 0.0924828            & 0.300332               \\ \hline
+        3                  & 5                      & 61                      & 61                         & 61                           & 0.0956978            & 0.320307               \\ \hline
+        4                  & 6                      & 68                      & 68                         & 68                           & 0.100375             & 0.341004               \\ \hline
+        5                  & 7                      & 74                      & 74                         & 74                           & 0.104818             & 0.361033               \\ \hline
+        6                  & 8                      & 103                     & 103                        & 103                          & 0.106892             & 0.380592               \\ \hline
+        7                  & 9                      & 76                      & 76                         & 76                           & 0.115359             & 0.445045               \\ \hline
+        8                  & 10                     & 118                     & 118                        & 118                          & 0.12311              & 0.429728               \\ \hline
+        9                  & 11                     & 86                      & 86                         & 86                           & 0.132754             & 0.514355               \\ \hline
+        10                 & 12                     & 82                      & 89                         & 82                           & 0.140774             & 0.774395               \\ \hline
+        11                 & 13                     & 86                      & 86                         & 88                           & 0.151665             & 0.911996               \\ \hline
+        12                 & 14                     & 79                      & 83                         & 81                           & 0.166655             & 1.1125                 \\ \hline
+        13                 & 15                     & 86                      & 99                         & 90                           & 0.193334             & 0.955698               \\ \hline
+        14                 & 16                     & 89                      & 98                         & 113                          & 0.188624             & 1.31044                \\ \hline
+        15                 & 17                     & 93                      & 107                        & 96                           & 0.275075             & 1.94006                \\ \hline
+        16                 & 18                     & 111                     & 135                        & 151                          & 0.243423             & 1.73838                \\ \hline
+        17                 & 29                     & 27,603                  & 31,508                     & 30,735                       & 0.404249             & 1.68196                \\ \hline
+        18                 & 38                     & 6,656                   & 8,591                      & 7,379                        & 0.673242             & 3.91157                \\ \hline
+        19                 & 194                    & 9,352                   & 65,556                     & 52,010                       & 12.9198              & 131.227                \\ \hline
+    \end{tabular}
+    \label{tab:summary_results}
 \end{table*}
 
 
@@ -311,15 +311,15 @@ The implementation leverages modern C++ and CUDA standards to ensure performance
 The test cases for evaluating the algorithm include two categories:
 \begin{enumerate}
     \item \textbf{Randomly Generated Instances:}
-    \begin{itemize}
-        \item Distance matrices are created with random values to simulate varying problem scales and distributions.
-        \item These instances assess the algorithm’s robustness and general performance.
-    \end{itemize}
+          \begin{itemize}
+              \item Distance matrices are created with random values to simulate varying problem scales and distributions.
+              \item These instances assess the algorithm’s robustness and general performance.
+          \end{itemize}
     \item \textbf{World TSP Benchmarks \cite{worldtsp}:}
-    \begin{itemize}
-        \item Well-known instances from the World TSP dataset provide realistic and standardized test cases.
-        \item These benchmarks facilitate comparisons with existing solutions and ensure validity against real-world scenarios.
-    \end{itemize}
+          \begin{itemize}
+              \item Well-known instances from the World TSP dataset provide realistic and standardized test cases.
+              \item These benchmarks facilitate comparisons with existing solutions and ensure validity against real-world scenarios.
+          \end{itemize}
 \end{enumerate}
 
 \renewcommand{\arraystretch}{1.5}
@@ -335,12 +335,12 @@ The test cases for evaluating the algorithm include two categories:
 % \end{figure}
 
 
-A heatmap (Figure ~\ref{fig:heatmap}) illustrates the deviation of the best distances found by CUDA and serial implementations from the expected distance as a percentage. Both implementations generally perform comparably in terms of deviation:
-    \begin{itemize}
-        \item For smaller city counts (3–30), the deviations for CUDA and serial implementations are minimal and comparable.
-        \item For mid-sized problems (38 cities), both implementations exhibit increasing deviations, with neither implementation showing a clear accuracy advantage.
-        \item For large-scale problems (194 cities), deviations become significant for both implementations, with the serial implementation occasionally achieving a smaller deviation than the CUDA implementation.
-    \end{itemize}
+% A heatmap (Figure ~\ref{fig:heatmap}) illustrates the deviation of the best distances found by CUDA and serial implementations from the expected distance as a percentage. Both implementations generally perform comparably in terms of deviation:
+%     \begin{itemize}
+%         \item For smaller city counts (3–30), the deviations for CUDA and serial implementations are minimal and comparable.
+%         \item For mid-sized problems (38 cities), both implementations exhibit increasing deviations, with neither implementation showing a clear accuracy advantage.
+%         \item For large-scale problems (194 cities), deviations become significant for both implementations, with the serial implementation occasionally achieving a smaller deviation than the CUDA implementation.
+%     \end{itemize}
 
 \subsection{Speedup Analysis}
 % Speedup Graph (two columns)
@@ -353,21 +353,21 @@ A heatmap (Figure ~\ref{fig:heatmap}) illustrates the deviation of the best dist
 % \end{figure}
 
 
-The speedup achieved by the CUDA implementation over the serial counterpart is depicted in Figure~\ref{fig:speedup}. This analysis highlights the performance advantage of GPU acceleration:
-    \begin{itemize}
-        \item For smaller city counts, the speedup factor is modest due to the relatively low computational demand.
-        \item As the number of cities increases, the CUDA implementation demonstrates significant speedup, reaching a factor of over 10x for large-scale problems.
-        \item The graph also highlights diminishing returns for speedup at extremely large city counts (e.g., 194 cities), likely due to overheads in GPU memory management.
-    \end{itemize}
+% The speedup achieved by the CUDA implementation over the serial counterpart is depicted in Figure~\ref{fig:speedup}. This analysis highlights the performance advantage of GPU acceleration:
+%     \begin{itemize}
+%         \item For smaller city counts, the speedup factor is modest due to the relatively low computational demand.
+%         \item As the number of cities increases, the CUDA implementation demonstrates significant speedup, reaching a factor of over 10x for large-scale problems.
+%         \item The graph also highlights diminishing returns for speedup at extremely large city counts (e.g., 194 cities), likely due to overheads in GPU memory management.
+%     \end{itemize}
 
 
 \subsection{Discussion}
 
 The results demonstrate that CUDA acceleration significantly improves the computational efficiency of the Genetic Algorithm for the Traveling Salesman Problem (TSP), particularly for larger problem sizes. Key observations include:
-    \begin{itemize}
-        \item Accuracy: Both implementations exhibit similar levels of accuracy across all problem sizes, with deviations from the expected distance being comparable. This indicates that the CUDA implementation does not sacrifice solution quality for speed.
-        \item   Efficiency: The speedup achieved by the CUDA implementation highlights the potential of parallel processing for heuristic optimization methods, especially for large-scale instances.
-    \end{itemize}
+\begin{itemize}
+    \item Accuracy: Both implementations exhibit similar levels of accuracy across all problem sizes, with deviations from the expected distance being comparable. This indicates that the CUDA implementation does not sacrifice solution quality for speed.
+    \item   Efficiency: The speedup achieved by the CUDA implementation highlights the potential of parallel processing for heuristic optimization methods, especially for large-scale instances.
+\end{itemize}
 
 The increasing deviations for very large problems (e.g., 194 cities) suggest that both implementations face challenges in maintaining accuracy at this scale. Future work could explore hybrid approaches or algorithmic enhancements to address these challenges and further leverage CUDA’s parallel processing capabilities.
 
