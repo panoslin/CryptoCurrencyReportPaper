@@ -1,0 +1,168 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{array}
+\usepackage[utf8]{inputenc}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{\textit{Optimal Selfish Mining Strategies in Bitcoin: A Comprehensive Summary}\\
+}
+
+\author{\IEEEauthorblockN{Student Name}
+    \IEEEauthorblockA{\textit{Department Name} \\
+        \textit{University Name}\\
+        City, Country \\
+        email@university.edu}
+}
+
+\maketitle
+\begin{abstract}
+    This paper presents a comprehensive summary of "Optimal Selfish Mining Strategies in Bitcoin" by Sapirshtein, Sompolinsky, and Zohar. The original work extends the model of selfish mining attacks in Bitcoin and provides an algorithm to compute optimal strategies for attackers. Our summary covers five key contributions: (1) the generalization and optimization of selfish mining strategies beyond previous approaches, (2) the discovery of a lower profit threshold required for profitable attacks, (3) the evaluation of proposed protocol modifications to mitigate such attacks, (4) the impact of network delays on the viability of selfish mining, and (5) the interaction between selfish mining and double spending attacks. Together, these findings demonstrate that Bitcoin's security against selfish mining is more tenuous than previously believed, with significant implications for the cryptocurrency's long-term incentive compatibility.
+\end{abstract}
+
+\begin{IEEEkeywords}
+    Bitcoin, Selfish Mining, Blockchain Security, Optimization, Double Spending
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+\subsection{Background and Motivation}
+
+The security of Bitcoin and other proof-of-work cryptocurrencies relies on miners following the protocol honestly. However, in 2014, Eyal and Sirer identified a vulnerability called "selfish mining," where miners can increase their relative rewards by deviating from the protocol. Their strategy, known as SM1, showed that miners controlling more than a certain threshold of computational power could profitably withhold blocks instead of publishing them immediately.
+
+The paper we summarize, "Optimal Selfish Mining Strategies in Bitcoin" by Sapirshtein et al., extends this work by finding optimal selfish mining strategies and examining their implications for Bitcoin's security. This summary is motivated by the need to understand the full extent of selfish mining vulnerabilities, which could potentially undermine Bitcoin's incentive structure and lead to centralization.
+
+\subsection{Objectives}
+
+This summary paper aims to provide a comprehensive overview of the key findings presented in the original paper, focusing on:
+
+• The algorithm for finding $\varepsilon$-optimal selfish mining strategies and its theoretical foundations
+
+• The lower profit threshold for selfish mining compared to previous work
+
+• The effectiveness of proposed protocol modifications against optimal selfish mining
+
+• The impact of network delays on the viability of selfish mining attacks
+
+• The relationship between selfish mining and double spending attacks
+
+\section{Generalization and Optimization of Selfish Mining}
+
+This section will present the original paper's approach to finding optimal selfish mining strategies through a Markov Decision Process (MDP) framework.
+
+\subsection{The Basic Selfish Mining Model}
+
+[Include explanation of the basic selfish mining model (SM1) as introduced by Eyal and Sirer, including key parameters $\alpha$ (attacker hashrate) and $\gamma$ (network connectivity).]
+
+\subsection{Markov Decision Process Formulation}
+
+[Describe how the authors formulate selfish mining as an MDP, including state representation, actions, transitions, and rewards.]
+
+\subsection{The $\varepsilon$-Optimal Algorithm}
+
+[Explain the algorithm developed by the authors to find $\varepsilon$-optimal selfish mining strategies, including its core components and theoretical guarantees.]
+
+\subsection{Verification and Implementation}
+
+[Describe how the authors verified their algorithm using simulations and other techniques.]
+
+\section{Lower Profit Threshold for Selfish Mining}
+
+This section will examine the finding that optimal selfish mining strategies are profitable at lower hashrates than previously thought.
+
+\subsection{Comparison with SM1}
+
+[Present the comparison between optimal strategies and SM1, showing how the optimal strategies outperform SM1 across different parameter settings.]
+
+\subsection{Revenue Analysis}
+
+[Discuss the revenue curves shown in the paper's results, highlighting key thresholds and crossover points.]
+
+\subsection{Implications for Bitcoin Security}
+
+[Explain what these lower thresholds mean for Bitcoin's security model and the minimum attacker size needed for profitable attacks.]
+
+\section{Evaluation of Protocol Modifications}
+
+This section will analyze the original paper's assessment of proposed protocol changes intended to mitigate selfish mining.
+
+\subsection{The Uniform Tie-Breaking Rule}
+
+[Describe the uniform tie-breaking rule proposed by Eyal and Sirer as a countermeasure against selfish mining.]
+
+\subsection{Effectiveness Against Optimal Strategies}
+
+[Present the paper's findings on how effective this modification is against optimal selfish mining strategies.]
+
+\subsection{Unexpected Benefits for Medium-Sized Attackers}
+
+[Explain the surprising finding that the uniform tie-breaking rule can actually benefit medium-sized attackers while limiting strong ones.]
+
+\subsection{Implications for Protocol Design}
+
+[Discuss what these results mean for Bitcoin protocol design and security enhancement efforts.]
+
+\section{Impact of Network Delays}
+
+This section will cover how network propagation delays affect the viability of selfish mining attacks.
+
+\subsection{Network Delay Model}
+
+[Describe how the authors model network delays in their analysis.]
+
+\subsection{Vanishing Profit Threshold}
+
+[Explain the paper's finding that, with network delays, the profit threshold for selfish mining vanishes.]
+
+\subsection{Small Miner Advantage}
+
+[Discuss how even miners with very small hashrates can profit from selfish mining under realistic network conditions.]
+
+\subsection{Real-World Implications}
+
+[Address what these findings mean for Bitcoin in practice, given that the real network does experience propagation delays.]
+
+\section{Interaction with Double Spending}
+
+This section will explore the connection between selfish mining and double spending attacks.
+
+\subsection{Double Spending Attack Mechanics}
+
+[Provide a brief explanation of double spending attacks in Bitcoin.]
+
+\subsection{Cost-Free Double Spending}
+
+[Explain the paper's finding that selfish miners can perform double spending attacks at no additional cost.]
+
+\subsection{Challenges to Nakamoto's Security Analysis}
+
+[Discuss how these findings undermine aspects of Satoshi Nakamoto's original security analysis for Bitcoin.]
+
+\subsection{Comprehensive Threat Model}
+
+[Present the more comprehensive threat model that emerges when considering both selfish mining and double spending together.]
+
+\section{Conclusion}
+
+The original paper makes significant contributions to understanding Bitcoin's security against selfish mining attacks. By finding optimal selfish mining strategies, the authors demonstrated that the profit threshold is lower than previously thought, protocol modifications may have unexpected effects, network delays eliminate the threshold entirely, and selfish mining enables cost-free double spending.
+
+These findings highlight the need for continued research into Bitcoin's incentive compatibility and security model. Future work could focus on developing more robust protocol modifications, exploring the practical feasibility of these attacks in the wild, and addressing the fundamental tension between network efficiency and security in decentralized consensus systems.
+
+\bibliographystyle{unsrt}
+\begin{thebibliography}{00}
+    \bibitem{original} A. Sapirshtein, Y. Sompolinsky, and A. Zohar, "Optimal selfish mining strategies in Bitcoin," Financial Cryptography and Data Security, 2016.
+    \bibitem{eyal} I. Eyal and E. G. Sirer, "Majority is not enough: Bitcoin mining is vulnerable," Financial Cryptography and Data Security, 2014.
+    \bibitem{nakamoto} S. Nakamoto, "Bitcoin: A peer-to-peer electronic cash system," 2008.
+\end{thebibliography}
+
+\end{document}

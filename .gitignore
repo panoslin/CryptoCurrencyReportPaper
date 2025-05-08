@@ -1,8 +1,9 @@
-paper2.aux
-paper2.bbl
-paper2.blg
-paper2.fdb_latexmk
-paper2.fls
-paper2.log
-paper2.pdf
-paper2.synctex.gz
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.pdf
+*.synctex.gz
+src/Optimal_Selfish_Mining_Strategies_in_Bitcoin.txt
