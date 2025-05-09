@@ -307,23 +307,13 @@ The most striking result from this analysis is that when realistic network delay
 
 \section{Interaction with Double Spending}
 
-This section will explore the connection between selfish mining and double spending attacks.
+The final significant contribution of Sapirshtein et al. is their analysis of how selfish mining interacts with double spending attacks, revealing a concerning synergy between these two threat vectors.
 
-\subsection{Double Spending Attack Mechanics}
+Bitcoin's security model assumes double spending attacks (reversing confirmed transactions) are costly. Nakamoto's analysis suggested attackers must invest significant computational resources with diminishing success probability as confirmations increase, which is why users wait for multiple confirmations for high-value transactions.
 
-[Provide a brief explanation of double spending attacks in Bitcoin.]
+The authors demonstrate, however, that miners who can profitably engage in selfish mining can perform double spending at no additional cost. A selfish miner already maintaining a private chain can include double-spend transactions in this chain, and if their chain wins, they both earn the higher selfish mining revenue and successfully reverse transactions on the public chain.
 
-\subsection{Cost-Free Double Spending}
-
-[Explain the paper's finding that selfish miners can perform double spending attacks at no additional cost.]
-
-\subsection{Challenges to Nakamoto's Security Analysis}
-
-[Discuss how these findings undermine aspects of Satoshi Nakamoto's original security analysis for Bitcoin.]
-
-\subsection{Comprehensive Threat Model}
-
-[Present the more comprehensive threat model that emerges when considering both selfish mining and double spending together.]
+This finding undermines Nakamoto's security analysis by invalidating the assumption that attackers bear opportunity costs when attempting transaction reversals. The economic disincentives against double spending are significantly weakened when combined with selfish mining strategies. Consequently, any miner who can profitably selfish mine (including small miners under network delay conditions) can also execute double spending attacks without additional cost, effectively lowering the security threshold for Bitcoin transactions.
 
 \section{Conclusion}
 
