@@ -287,23 +287,23 @@ This counterintuitive result demonstrates that protocol modifications may have u
 
 \section{Impact of Network Delays}
 
-This section will cover how network propagation delays affect the viability of selfish mining attacks.
+Sapirshtein et al. extended their analysis to include network propagation delays, revealing far more concerning implications for Bitcoin's security.
 
 \subsection{Network Delay Model}
 
-[Describe how the authors model network delays in their analysis.]
+The authors developed a more realistic model of the Bitcoin network by incorporating actual block propagation dynamics. Unlike the original model which assumed instantaneous block propagation, this approach accounts for variable transmission times between nodes throughout the network. The model captures how an attacker's blocks might reach some miners before honest blocks do, creating natural forks even without deliberate withholding. By parameterizing different connectivity scenarios, the authors could analyze how selfish mining performs under various network conditions that more closely reflect real-world deployments.
 
 \subsection{Vanishing Profit Threshold}
 
-[Explain the paper's finding that, with network delays, the profit threshold for selfish mining vanishes.]
+The most striking result from this analysis is that when realistic network delays are considered, the profit threshold for selfish mining completely vanishes. This means that miners with arbitrarily small computational power can potentially profit from deviating from the protocol – a dramatic departure from previous findings that established minimum threshold requirements. The advantage becomes more pronounced for miners with better network positions (higher effective $\gamma$ values), but exists even for poorly connected attackers. This fundamentally challenges the notion that Bitcoin remains secure as long as no miner controls a significant fraction of the network's computational power.
 
-\subsection{Small Miner Advantage}
+% \subsection{Small Miner Advantage}
 
-[Discuss how even miners with very small hashrates can profit from selfish mining under realistic network conditions.]
+% Under the delay model, even miners with as little as 0.1\% of the network hashrate can increase their relative revenue through selective selfish mining. The attack pattern shifts from persistent withholding to opportunistic deviation – small miners don't continuously withhold blocks but instead selectively execute the strategy when specific network conditions favor them. These opportunities arise naturally from propagation delays, allowing even minute participants to capitalize on temporary advantages. This fundamentally changes the threat model, as it expands the pool of potential attackers from a few large mining operations to potentially any participant in the network.
 
-\subsection{Real-World Implications}
+% \subsection{Real-World Implications}
 
-[Address what these findings mean for Bitcoin in practice, given that the real network does experience propagation delays.]
+% These findings have profound implications for Bitcoin's security model. First, they suggest that Bitcoin's incentive compatibility breaks down under realistic network conditions, contradicting a core assumption in the original design. Second, the protocol becomes vulnerable regardless of how mining power is distributed, undermining the belief that decentralization alone ensures protocol adherence. Finally, selfish mining may be more practical and widespread than previously understood, potentially occurring opportunistically without being easily detected. This challenges the fundamental premise that rational miners will follow the protocol, as even small deviations can be profitable under common network conditions.
 
 \section{Interaction with Double Spending}
 
