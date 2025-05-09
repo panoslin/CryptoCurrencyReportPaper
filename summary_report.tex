@@ -248,18 +248,15 @@ The performance difference arises primarily from the optimal strategy's more sop
 
 \section{Evaluation of Protocol Modifications}
 
-This section examines the authors' analysis of protocol modifications proposed to mitigate selfish mining, particularly the uniform tie-breaking rule suggested by Eyal and Sirer.
+Sapirshtein et al. evaluated countermeasures against selfish mining, focusing on Eyal and Sirer's uniform tie-breaking rule.
 
 \subsection{The Uniform Tie-Breaking Rule}
 
-Eyal and Sirer proposed a simple countermeasure against selfish mining: when miners encounter competing chains of equal length, they should choose which chain to extend uniformly at random, rather than defaulting to the first-seen chain. This modification aims to reduce the attacker's advantage during "block races" by decreasing the value of the $\gamma$ parameter.
-
-Under the current Bitcoin protocol, when a selfish miner publishes a previously withheld block that creates a fork of equal length with the honest chain, miners typically extend the chain they received first (usually the honest chain). With uniform random selection between equal-length chains, the attacker has a 50\% chance of having their chain extended regardless of propagation advantages.
+When miners encounter competing chains of equal length, Eyal and Sirer proposed they should select one uniformly at random rather than choosing the first-seen chain. This aims to neutralize the attacker's network advantage by setting effective $\gamma = 0.5$ during block races.
 
 \subsection{Effectiveness Against Optimal Strategies}
 
-Sapirshtein et al. evaluated this countermeasure by computing optimal selfish mining strategies against the modified protocol. Their findings:
-
+The authors found this modification:
 \begin{itemize}
     \item The modification is somewhat effective against strong attackers (high $\alpha$), reducing their maximum potential revenue
     \item For $\gamma = 1$, the profit threshold increases from approximately 23.2\% to 25\% 
@@ -270,28 +267,23 @@ However, contrary to Eyal and Sirer's conjecture that this modification would in
 
 \subsection{Unexpected Benefits for Medium-Sized Attackers}
 
-The authors discovered a surprising result: the uniform tie-breaking rule actually benefits medium-sized attackers with poor network connectivity. Specifically:
-
+Counter-intuitively, the modification benefits miners with poor network connectivity:
 \begin{itemize}
-    \item For attackers with low $\gamma$ values (poor network connectivity), the uniform selection rule provides an artificial improvement in effective connectivity
-    \item This effect is particularly pronounced for attackers with $\alpha$ between 25\% and 32\%
-    \item Such attackers gain higher revenue under the modified protocol than under the original one
+    \item Attackers with 25-32\% hashrate and low $\gamma$ gain higher revenue
+    \item The random choice rule effectively improves their network position
+    \item These miners achieve better results under the modified protocol than the original
 \end{itemize}
 
 This counterintuitive result demonstrates that protocol modifications may have unexpected consequences when attackers employ optimal strategies rather than fixed approaches like SM1.
 
-\subsection{Implications for Protocol Design}
+% \subsection{Implications for Protocol Design}
 
-The analysis of the uniform tie-breaking rule offers important insights for protocol design:
-
-\begin{itemize}
-    \item Protocol modifications require rigorous analysis against optimized adversarial strategies, not just specific attack vectors
-    \item Simple fixes may have unintended consequences that benefit certain classes of attackers
-    \item The uniform tie-breaking rule is not a comprehensive solution to selfish mining
-    \item More fundamental protocol changes may be necessary to address selfish mining vulnerabilities
-\end{itemize}
-
-The authors suggest that effective countermeasures should consider both the computational power and network connectivity of potential attackers, as improvements in one dimension may offset vulnerabilities in the other.
+% This analysis reveals important design considerations:
+% \begin{itemize}
+%     \item Protocol changes must be evaluated against optimal strategies, not just specific attacks
+%     \item Simple fixes may have unexpected consequences
+%     \item Effective countermeasures must consider both computational power and network position
+% \end{itemize}
 
 \section{Impact of Network Delays}
 
